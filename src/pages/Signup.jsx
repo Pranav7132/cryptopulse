@@ -43,6 +43,13 @@ const Signup = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-xl dark:bg-slate-900">
+        <button
+  onClick={() => navigate("/")}
+  className="mb-4 text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+>
+  ← Back to Home
+</button>
+
         <h2 className="mb-2 text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
           Create your own Account!
         </h2>

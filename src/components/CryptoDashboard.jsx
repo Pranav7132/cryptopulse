@@ -302,7 +302,7 @@ useEffect(() => {
   ) : (
     <button
       onClick={() => navigate("/login")}
-      className="rounded-lg border border-blue-300 px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+      className="rounded-lg border border-blue-300 ml-3 px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
     >
       Login
     </button>
