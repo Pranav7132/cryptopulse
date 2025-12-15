@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Moon, Sun, Search, ArrowUpDown, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import CryptoConverter from './CryptoConverter';
+import { useAuth } from "../context/AuthContext.jsx";
+import CryptoConverter from './CryptoConverter.jsx';
 import logo from "./logo2.jpg";
 
 const USER_ID = "demoUser";
@@ -12,6 +13,8 @@ const CryptoDashboard = () => {
   const [watchlist, setWatchlist] = useState([]);
   const [cryptoData, setCryptoData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const { user, isAuthenticated,logout } = useAuth();
+  console.log("AUTH:", isAuthenticated, user);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -273,6 +276,40 @@ useEffect(() => {
               >
                 {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
               </button>
+              <div className="flex items-center gap-3">
+  {isAuthenticated && user && (
+    <div className="ml-3 flex items-center rounded-full bg-slate-100 px-3 py-1 dark:bg-slate-800">
+  {/* Avatar – leftmost */}
+  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white">
+    {user.username.charAt(0).toUpperCase()}
+  </div>
+
+  {/* Username */}
+  <span className="ml-2 text-sm font-medium text-slate-700 dark:text-slate-200">
+    {user.username}
+  </span>
+</div>
+
+  )}
+
+  {isAuthenticated ? (
+    <button
+      onClick={logout}
+      className="rounded-lg border border-red-300 px-3 py-1 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+    >
+      Logout
+    </button>
+  ) : (
+    <button
+      onClick={() => navigate("/login")}
+      className="rounded-lg border border-blue-300 px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+    >
+      Login
+    </button>
+  )}
+</div>
+  
+
             </div>
 
             <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">

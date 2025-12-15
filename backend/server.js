@@ -1,4 +1,5 @@
 import watchlistRoutes from "./routes/watchlistRoutes.js";
+import authRoutes from "./routes/auth.js";
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
@@ -9,6 +10,7 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use("/api/auth", authRoutes);
 
 app.get("/", (req, res) => {
   res.send("CryptoPulse backend running");

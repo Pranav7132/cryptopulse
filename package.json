@@ -1,6 +1,7 @@
 {
   "name": "crypto-price-tracker",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
@@ -8,9 +9,11 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.13.2",
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.511.0",
     "mongodb": "^7.0.0",
     "mongoose": "^9.0.1",
