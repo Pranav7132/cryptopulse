@@ -5,7 +5,6 @@ const USER_ID = "demoUser";
 
 const Watchlist = () => {
   const navigate = useNavigate();
-
   const [coins, setCoins] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -90,9 +89,15 @@ const Watchlist = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200 p-4 text-slate-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-slate-100">
-      <div className="mx-auto max-w-5xl">
+      <div className="mx-auto max-w-5xl"> 
         {/* Header */}
         <div className="mb-6">
+          <button
+  onClick={() => navigate("/")}
+  className="mb-4 inline-flex items-center text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+>
+  ← Back to Home
+</button>
           <h1 className="text-2xl font-bold tracking-tight">⭐ Watchlist</h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             Your starred cryptocurrencies with live market data

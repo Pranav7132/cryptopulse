@@ -17,13 +17,17 @@ const CryptoDashboard = () => {
   console.log("AUTH:", isAuthenticated, user);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState('');
   const [sortConfig, setSortConfig] = useState({
     key: 'market_cap_rank',
     direction: 'asc',
   });
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+  const storedTheme = localStorage.getItem("theme");
+  return storedTheme === "dark";
+});
   const [displayCount, setDisplayCount] = useState(10);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [activeTab, setActiveTab] = useState('prices'); // New state for tab management
@@ -147,22 +151,22 @@ useEffect(() => {
       return `$${price.toFixed(6)}`;
     }
   };
-
   // Toggle dark/light mode
   const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
+  setIsDarkMode((prev) => {
+    const newMode = !prev;
+    localStorage.setItem("theme", newMode ? "dark" : "light");
+    return newMode;
+  });
+};
   const toggleWatchlist = (coinId) => {
   let updated;
-
   if (watchlist.includes(coinId)) {
     updated = watchlist.filter((id) => id !== coinId);
   } else {
     updated = [...watchlist, coinId];
   }
-
   setWatchlist(updated);
-
   fetch("http://localhost:5000/api/watchlist/" + USER_ID, {
     method: "POST",
     headers: {
@@ -171,28 +175,23 @@ useEffect(() => {
     body: JSON.stringify({ coins: updated }),
   });
 };
-
   // Handle display count change
   const handleDisplayCountChange = (e) => {
     setDisplayCount(Number(e.target.value));
   };
-
   // Manual refresh function
   const handleRefresh = () => {
     fetchCryptoData();
   };
-
   // Tab change handler
   const handleTabChange = (tab) => {
     setActiveTab(tab);
   };
-
   // ---------- NEW: Global stats for cards ----------
   const totalMarketCap = cryptoData.reduce(
     (sum, c) => sum + (c.market_cap || 0),
     0
   );
-
   const validChangeCoins = cryptoData.filter(
     (c) => typeof c.price_change_percentage_24h === 'number'
   );
@@ -207,7 +206,6 @@ useEffect(() => {
   const topGainer = [...validChangeCoins].sort(
     (a, b) => b.price_change_percentage_24h - a.price_change_percentage_24h
   )[0];
-
   const btc = cryptoData.find(
     (c) => c.symbol && c.symbol.toLowerCase() === 'btc'
   );
@@ -215,9 +213,7 @@ useEffect(() => {
     btc && totalMarketCap > 0
       ? ((btc.market_cap / totalMarketCap) * 100).toFixed(1)
       : null;
-
   // -------------------------------------------------
-
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-slate-100 dark:bg-slate-950">
@@ -230,7 +226,6 @@ useEffect(() => {
       </div>
     );
   }
-
   if (error) {
     return (
       <div className="flex h-screen items-center justify-center bg-slate-100 dark:bg-slate-950">
@@ -247,7 +242,6 @@ useEffect(() => {
       </div>
     );
   }
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200 text-slate-900 transition-colors duration-300 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-slate-100">
       <header className="border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-900/80">
@@ -294,24 +288,21 @@ useEffect(() => {
 
   {isAuthenticated ? (
     <button
-      onClick={logout}
-      className="rounded-lg border border-red-300 px-3 py-1 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
-    >
-      Logout
-    </button>
+  onClick={() => setShowLogoutConfirm(true)}
+  className="rounded-full bg-red-600 ml-2 px-4 py-1.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-red-700 hover:shadow-lg active:scale-95"
+>
+  Logout
+</button>
   ) : (
     <button
-      onClick={() => navigate("/login")}
-      className="rounded-lg border border-blue-300 ml-3 px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-    >
-      Login
-    </button>
+  onClick={() => navigate("/login")}
+  className="rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-4 ml-3 py-1.5 text-sm font-semibold text-white shadow-md transition-all hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg active:scale-95"
+>
+  Login
+</button>
   )}
 </div>
-  
-
             </div>
-
             <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
               <div className="relative w-full sm:w-64">
                 <Search className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
@@ -593,19 +584,27 @@ useEffect(() => {
         {/* ⭐ NEW WATCHLIST CELL */}
         <td className="px-4 py-4 text-center">
           <button
-            onClick={(e) => {
-              e.stopPropagation(); // prevents row navigation
-              toggleWatchlist(crypto.id);
-            }}
-            className={`text-lg transition ${
-              watchlist.includes(crypto.id)
-                ? 'text-yellow-400'
-                : 'text-gray-400 hover:text-yellow-300'
-            }`}
-            title="Add to watchlist"
-          >
-            ★
-          </button>
+  onClick={(e) => {
+    e.stopPropagation();
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+    toggleWatchlist(crypto.id);
+  }}
+  className={`text-lg transition ${
+    isAuthenticated && watchlist.includes(crypto.id)
+      ? "text-yellow-400"
+      : "text-gray-400 hover:text-yellow-300"
+  }`}
+  title={
+    isAuthenticated
+      ? "Add to watchlist"
+      : "Login required to use watchlist"
+  }
+>
+  ★
+</button>
         </td>
       </tr>
     ))}
@@ -621,6 +620,37 @@ useEffect(() => {
       <footer className="mt-4 border-t border-slate-200 bg-white/80 py-4 text-center text-xs text-gray-600 shadow-inner dark:border-slate-800 dark:bg-slate-900/80 dark:text-gray-400">
         <p>Data provided by CoinGecko API • Built with React</p>
       </footer>
+      {showLogoutConfirm && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+    <div className="w-full max-w-sm animate-[fadeIn_0.15s_ease-out] rounded-2xl bg-white p-6 shadow-xl dark:bg-slate-900">
+      <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+        Confirm Logout
+      </h3>
+      <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+        Are you sure you want to log out?
+      </p>
+
+      <div className="mt-6 flex justify-end gap-3">
+        <button
+          onClick={() => setShowLogoutConfirm(false)}
+          className="rounded-lg px-4 py-1.5 text-sm text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={() => {
+            logout();
+            setShowLogoutConfirm(false);
+          }}
+          className="rounded-lg bg-red-600 px-4 py-1.5 text-sm text-white hover:bg-red-700"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };

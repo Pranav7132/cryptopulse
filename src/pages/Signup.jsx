@@ -1,4 +1,5 @@
 import { useState } from "react";
+import logo from "../components/logooo.jpg";
 import { useNavigate } from "react-router-dom";
 const getPasswordStrength = (password) => {
   if (!password) return null;
@@ -43,6 +44,13 @@ const Signup = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-xl dark:bg-slate-900">
+        <div className="mb-6 flex justify-center">
+  <img
+    src={logo}
+    alt="CryptoPulse Logo"
+    className="h-14 w-14 rounded-full shadow-md"
+  />
+</div>
         <button
   onClick={() => navigate("/")}
   className="mb-4 text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
@@ -64,12 +72,16 @@ const Signup = () => {
         )}
 
         {success && (
-          <div className="mb-4 rounded-lg bg-green-50 px-4 py-2 text-sm text-green-600 dark:bg-green-900/20">
-            {success}
-          </div>
+          <div className="mb-4 flex items-center gap-2 rounded-lg bg-green-50 px-4 py-2 text-sm text-green-600 dark:bg-green-900/20">
+  <span>✓</span>
+  <span>{success}</span>
+</div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form
+  onSubmit={handleSubmit}
+  className="space-y-4 rounded-2xl bg-slate-50 p-4 dark:bg-slate-800"
+>
           <input
             type="text"
             placeholder="Username"

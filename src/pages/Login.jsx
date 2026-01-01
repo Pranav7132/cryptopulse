@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
-
+import logo from "../components/logooo.jpg";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,13 +34,19 @@ const Login = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-xl dark:bg-slate-900">
+            <div className="mb-6 flex justify-center">
+  <img
+    src={logo}
+    alt="CryptoPulse Logo"
+    className="h-14 w-14 rounded-full shadow-md"
+  />
+</div>
         <button
   onClick={() => navigate("/")}
   className="mb-4 text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
 >
   ← Back to Home
 </button>
-
         <h2 className="mb-2 text-2xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
           Welcome Back!
         </h2>
@@ -49,12 +55,16 @@ const Login = () => {
         </p>
 
         {error && (
-          <div className="mb-4 rounded-lg bg-red-50 px-4 py-2 text-sm text-red-600 dark:bg-red-900/20">
-            {error}
-          </div>
+          <div className="mb-4 flex items-center gap-2 rounded-lg bg-red-50 px-4 py-2 text-sm text-red-600 dark:bg-red-900/20">
+  <span>⚠</span>
+  <span>{error}</span>
+</div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form
+  onSubmit={handleSubmit}
+  className="space-y-4 rounded-2xl bg-slate-50 p-4 dark:bg-slate-800"
+>
           <input
             type="email"
             placeholder="Email address"
@@ -86,7 +96,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className="w-full rounded-xl bg-blue-600 py-2.5 text-sm font-medium text-white transition hover:bg-blue-700"
+            className="w-full rounded-xl bg-blue-600 py-2.5 text-sm font-medium text-white transition-all hover:-translate-y-0.5 hover:bg-blue-700 active:translate-y-0"  
           >
             Login
           </button>

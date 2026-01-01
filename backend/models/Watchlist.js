@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-
 const watchlistSchema = new mongoose.Schema(
   {
     userId: {
@@ -13,5 +12,4 @@ const watchlistSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
 export default mongoose.model("Watchlist", watchlistSchema);
